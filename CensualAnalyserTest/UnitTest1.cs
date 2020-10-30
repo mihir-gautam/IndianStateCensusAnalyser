@@ -6,9 +6,7 @@ using static IndianStateCensusAnalyser.CensusAnalyser;
 namespace CensualAnalyserTest
 {
     public class Tests
-    {
-        //CensusAnalyser.CensusAnalyser censusAnalyser;
-
+    { 
         static string indianStateCensusHeaders = "State,Population,AreaInSqKm,DensityPerSqKm";
         static string indianStateCodeHeaders = "SrNo,State Name,TIN,StateCode";
         static string indianStateCensusFilePath = @"C:\Users\Mihir Gautam\source\repos\IndianStateCensusAnalyser\CensualAnalyserTest\CsvFiles\IndiaStateCensusData.csv";
@@ -20,13 +18,6 @@ namespace CensualAnalyserTest
         static string wrongIndianStateCodeFileType = @"C:\Users\Mihir Gautam\source\repos\IndianStateCensusAnalyser\CensualAnalyserTest\CsvFiles\IndiaStateCode.txt";
         static string delimiterIndianStateCodeFilePath = @"C:\Users\Mihir Gautam\source\repos\IndianStateCensusAnalyser\CensualAnalyserTest\CsvFiles\DelimiterIndiaStateCode.csv";
         static string wrongHeaderStateCodeFilePath = @"C:\Users\Mihir Gautam\source\repos\IndianStateCensusAnalyser\CensualAnalyserTest\CsvFiles\WrongIndiaStateCode.csv";
-        //US Census FilePath
-        //static string usCensusHeaders = "State Id,State,Population,Housing units,Total area,Water area,Land area,Population Density,Housing Density";
-        //static string usCensusFilepath = @"C:\Users\Dell\source\repos\CensusAnalyser\CensusAnalyserTest\CsvFiles\USCsvFiles\USCensusData.csv";
-        //static string wrongUSCensusFilePath = @"C:\Users\Dell\source\repos\CensusAnalyser\CensusAnalyserTest\CsvFiles\USCsvFiles\USData.csv";
-        //static string wrongUSCensusFileType = @"C:\Users\Dell\source\repos\CensusAnalyser\CensusAnalyserTest\CsvFiles\USCsvFiles\USCensusData.txt";
-        //static string wrongHeaderUSCensusFilePath = @"C:\Users\Dell\source\repos\CensusAnalyser\CensusAnalyserTest\CsvFiles\USCsvFiles\WrongHeaderUSCensusData.csv";
-        //static string delimeterUSCensusFilePath = @"C:\Users\Dell\source\repos\CensusAnalyser\CensusAnalyserTest\CsvFiles\USCsvFiles\DelimiterUSCensusData.csv";
 
         CensusAnalyser censusAnalyser;
         Dictionary<string, CensusDTO> totalRecord;
@@ -53,6 +44,14 @@ namespace CensualAnalyserTest
             stateRecord = censusAnalyser.LoadCensusData(indianStateCodeFilePath, Country.INDIA, indianStateCodeHeaders);
             Assert.AreEqual(29, totalRecord.Count);
             Assert.AreEqual(37, stateRecord.Count);
+        }
+        [Test]
+        public void GivenWrongIndianCensusDataFile_WhenReaded_ShouldReturnCustomException()
+        {
+            var censusException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.LoadCensusData(wrongIndianStateCensusFilePath, Country.INDIA, indianStateCensusHeaders));
+            var stateException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.LoadCensusData(wrongIndianStateCensusFilePath, Country.INDIA, indianStateCodeHeaders));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, censusException.eType);
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, stateException.eType);
         }
     }
 }
